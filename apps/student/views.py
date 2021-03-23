@@ -1,19 +1,19 @@
-from rest_framework import serializers, status
-from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
+from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Student
 from .serializers import StudentSerializer
 
 
-@api_view(["GET", "POST"])
-def student_list(request):
-
-    if request.method == "GET":
+class StudentList(APIView):
+    def get(self, request):
         students = Student.objects.all()
         serializer = StudentSerializer(students, many=True)
         return Response(serializer.data)
-    elif request.method == "POST":
+
+    def post(self, request):
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -21,22 +21,22 @@ def student_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET", "PUT", "DELETE"])
-def student_detail(request, pk):
-    try:
-        student = Student.objects.get(pk=pk)
-    except Student.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == "GET":
+class StudentDetail(APIView):
+    def get(self, request, pk):
+        student = get_object_or_404(Student, pk=pk)
         serializer = StudentSerializer(student)
         return Response(serializer.data)
-    elif request.method == "PUT":
+
+    def put(self, request, pk):
+        student = get_object_or_404(Student, pk=pk)
         serializer = StudentSerializer(student, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
-    elif request.method == "DELETE":
+
+    def delete(self, request, pk):
+        student = get_object_or_404(Student, pk=pk)
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+        
