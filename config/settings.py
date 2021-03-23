@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local apps
     "apps.employee",
+    "apps.student",
     # External apps
     "django_extensions",
     "rest_framework",
