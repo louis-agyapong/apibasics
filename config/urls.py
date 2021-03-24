@@ -22,6 +22,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("employee/", include("apps.employee.urls")),
     path("students/", include("apps.student.urls")),
+    path("api/", include("apps.nestedserializers.urls")),
 ]
 
 
