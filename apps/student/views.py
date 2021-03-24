@@ -1,42 +1,31 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import generics, mixins
 
 from .models import Student
 from .serializers import StudentSerializer
 
 
-class StudentList(APIView):
+class StudentList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
     def get(self, request):
-        students = Student.objects.all()
-        serializer = StudentSerializer(students, many=True)
-        return Response(serializer.data)
+        return self.list(request)
 
     def post(self, request):
-        serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
 
 
-class StudentDetail(APIView):
+class StudentDetail(
+    mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView
+):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
     def get(self, request, pk):
-        student = get_object_or_404(Student, pk=pk)
-        serializer = StudentSerializer(student)
-        return Response(serializer.data)
+        return self.retrieve(request, pk)
 
     def put(self, request, pk):
-        student = get_object_or_404(Student, pk=pk)
-        serializer = StudentSerializer(student, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        return self.update(request, pk)
 
     def delete(self, request, pk):
-        student = get_object_or_404(Student, pk=pk)
-        student.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-        
+        return self.destroy(request, pk)
