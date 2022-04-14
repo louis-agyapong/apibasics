@@ -1,5 +1,7 @@
-from django.urls import include, path
+from django.urls import path
+from apps.polls.views import polls_list, polls_detail
 
 urlpatterns = [
-    path('polls/', include('polls.urls')),
+    path("", polls_list, name="polls_list"),
+    path("<int:pk>/", polls_detail, name="polls_detail"),
 ]
