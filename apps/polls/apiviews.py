@@ -1,4 +1,5 @@
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.views import APIView
 
 from apps.polls.models import Choice, Poll, Vote
 
@@ -16,7 +17,10 @@ class PollDetail(generics.RetrieveDestroyAPIView):
 
 
 class ChoiceList(generics.ListCreateAPIView):
-    queryset = Choice.objects.all()
+    def get_queryset(self):
+        queryset = Choice.objects.filter(poll_id=self.kwargs["pk"])
+        return queryset
+
     serializer_class = ChoiceSerializer
 
 
