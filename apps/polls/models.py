@@ -19,10 +19,13 @@ class Choice(models.Model):
     def __str__(self) -> str:
         return self.choice_text
 
+
 class Vote(models.Model):
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE, verbose_name=_("Choice"), related_name="votes")
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, verbose_name=_("Poll"), related_name="votes")
     voted_by = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Voted by"))
 
     class Meta:
-        unique_together = ("poll", "voted_by")
+        constraints = [
+            models.UniqueConstraint(fields=["poll", "voted_by"], name="unique_poll_voted_by"),
+        ]
