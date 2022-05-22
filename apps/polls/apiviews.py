@@ -26,8 +26,6 @@ class ChoiceList(generics.ListCreateAPIView):
 
 
 class CreateVote(APIView):
-    serializer_class = VoteSerializer
-
     def post(self, request, pk, choice_pk):
         voted_by = request.data.get("voted_by")
         data = {"poll_id": pk, "choice_id": choice_pk, "voted_by": voted_by}
@@ -36,6 +34,4 @@ class CreateVote(APIView):
             vote = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
-
-
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
