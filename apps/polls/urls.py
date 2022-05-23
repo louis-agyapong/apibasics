@@ -1,6 +1,13 @@
-from django.urls import path, include
+from django.urls import include, path
 
-from apps.polls.apiviews import PollDetail, PollList, ChoiceList, CreateVote, UserCreate
+from apps.polls.apiviews import (
+    ChoiceList,
+    CreateVote,
+    LoginView,
+    PollDetail,
+    PollList,
+    UserCreate,
+)
 
 urlpatterns = [
     path(
@@ -15,4 +22,5 @@ urlpatterns = [
         ),
     ),
     path("users/", UserCreate.as_view(), name="user_create"),
+    path("login/", LoginView.as_view(), name="login"),
 ]
