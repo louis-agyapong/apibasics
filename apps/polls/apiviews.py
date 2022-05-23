@@ -1,10 +1,15 @@
 from rest_framework import generics, status
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from apps.polls.models import Choice, Poll, Vote
+from apps.polls.models import Choice, Poll
 
-from .serializers import ChoiceSerializer, PollSerializer, VoteSerializer
+from .serializers import (
+    ChoiceSerializer,
+    PollSerializer,
+    UserSerializer,
+    VoteSerializer,
+)
 
 
 class PollList(generics.ListCreateAPIView):
@@ -35,3 +40,9 @@ class CreateVote(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserCreate(generics.CreateAPIView):
+    # authentication_classes = ()
+    # permission_classes = ()
+    serializer_class = UserSerializer
